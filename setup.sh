@@ -17,15 +17,18 @@ cd ..
 # echo "export VOCAB_PATH=\"./torchMoji/model/vocabulary.json\""
 
 ## Dataset download
-[ ! -d ~/.kaggle ] && mkdir ~/.kaggle/
-wget -O ~/.kaggle/kaggle.json "https://drive.google.com/uc?export=download&id=1sbrOZ6-lhTyeoP6TdXdkL8wocPlwbXE9"
-chmod 600 ~/.kaggle/kaggle.json
+
+# ## KAGGLE VERSION
+# [ ! -d ~/.kaggle ] && mkdir ~/.kaggle/
+# wget -O ~/.kaggle/kaggle.json "https://drive.google.com/uc?export=download&id=1sbrOZ6-lhTyeoP6TdXdkL8wocPlwbXE9"
+# chmod 600 ~/.kaggle/kaggle.json
 
 [ ! -d data/ ] && mkdir data
 cd data
 if [ ! -f games.json ]; then
-    pip install kaggle
-    kaggle datasets download -d beastovest/gog-games-with-reviews
+    # pip install kaggle
+    # kaggle datasets download -d beastovest/gog-games-with-reviews
+    wget -O gog-games-with-reviews.zip "https://drive.google.com/uc?export=download&id=1Ls1Wbs_AoMe_tSpXUWpUPKt5N173vZ9F"
     unzip gog-games-with-reviews.zip
 fi
 cd ..
