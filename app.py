@@ -6,6 +6,8 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
+from get_top import get_emojis_from_game_name, get_top_emojis_by_genres_from_gr
+
 from torchmoji.sentence_tokenizer import SentenceTokenizer
 from torchmoji.model_def import torchmoji_emojis
 
@@ -18,23 +20,11 @@ from constants import (
 
 @st.cache
 def load_data():
-    columns = ["name", "reviewer_name", "review_rating", "review_title", "review_content"]
-    with open(REVIEWS_DATA_PATH, "r") as read_file:
-        json_data = json.load(read_file)
-
-    to_df = []
-    for line in json_data:
-        for review in line["reviews"]:
-            line_to_df = []
-            line_to_df.append(line["name"])
-            line_to_df.append(review["name"])
-            line_to_df.append(review["rating"])
-            line_to_df.append(review["title"])
-            line_to_df.append(review["content"])
-            to_df.append(line_to_df)
-    reviews_df = pd.DataFrame(data=to_df, columns=columns)
-
-    return reviews_df
+    games_df = pd.read_csv('./Groupped_by_Name_df.csv', index_col=0)
+    genres_df = pd.read_csv('./Groupped_by_Genres_df.csv')
+    genres_df.columns = ['genre', 'emojis']
+    # genres_df.index.name = 'genre'
+    return games_df, genres_df
 
 
 @st.cache
@@ -68,15 +58,26 @@ def predict_emojis(texts, model, tokenizer):
 
 def main():
     st.markdown("# 🎲 Game Reviews Sentiment Analysis With Emojis")
-    game = st.selectbox("Choose game to analyse: ", GAME_LIST)
+    # game = st.selectbox("Choose game to analyse: ", GAME_LIST)
 
-    reviews_df = load_data()
+    games_df, genres_df = load_data()
+    games = games_df.index.values
+    genres = genres_df.genre.values
 
-    maxlen = len(max(REVIEWS.values(), key=len))
-    model = get_model()
-    vocabulary = get_vocab()
-    tokenizer = SentenceTokenizer(vocabulary, maxlen)
-    predict_emojis([REVIEWS[game]], model, tokenizer)
+    game = st.selectbox("Choose game to analyse: ", games,)
+    game_emojis = get_emojis_from_game_name(games_df, game)
+    st.write(game_emojis)
+
+    st.markdown("# Most popular emotions in genre")
+    genre = st.selectbox("Choose genre to analyse: ", genres)
+    genre_emojis = get_top_emojis_by_genres_from_gr(genres_df, genre)
+    st.write(genre_emojis)
+
+    # maxlen = len(max(REVIEWS.values(), key=len))
+    # model = get_model()
+    # vocabulary = get_vocab()
+    # tokenizer = SentenceTokenizer(vocabulary, maxlen)
+    # predict_emojis([REVIEWS[game]], model, tokenizer)
 
 
 if __name__ == "__main__":
