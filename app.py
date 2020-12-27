@@ -12,10 +12,10 @@ from torchmoji.sentence_tokenizer import SentenceTokenizer
 from torchmoji.model_def import torchmoji_emojis
 
 from constants import (
-    EMOJIS, REVIEWS_DATA_PATH,
-    PRETRAINED_PATH, VOCAB_PATH,
-    GAME_LIST, REVIEWS,  # TODO delete in the final version, only for dev branch
+    EMOJIS, MAX_TEXT_LEN, DEFAULT_REVIEW,
+    REVIEWS_DATA_PATH, VOCAB_PATH,
 )
+from download_model import download_pretrained, download_vocab
 
 
 @st.cache
@@ -29,12 +29,15 @@ def load_data():
 
 @st.cache
 def get_model():
-    return torchmoji_emojis(PRETRAINED_PATH)
+    pretrained_path = download_pretrained()
+    return torchmoji_emojis(pretrained_path)
 
 
 @st.cache
 def get_vocab():
-    with open(VOCAB_PATH, 'r') as f:
+    vocabulary_path = download_vocab()
+    with open(vocabulary_path, 'r') as f:
+        print(vocabulary_path)
         vocabulary = json.load(f)
     return vocabulary
 
@@ -44,7 +47,8 @@ def top_elements(array, k):
     return ind[np.argsort(array[ind])][::-1]
 
 
-def predict_emojis(texts, model, tokenizer):
+def predict_emojis(text, model, tokenizer):
+    texts = [text]
     tokenized, _, _ = tokenizer.tokenize_sentences(texts)
     prob_list = model(tokenized)
 
@@ -53,7 +57,8 @@ def predict_emojis(texts, model, tokenizer):
     # map to emojis
     for i, emoji_ids in enumerate(emoji_ids_list):
         emojis = map(lambda x: EMOJIS[x], emoji_ids)
-        st.write(emoji.emojize("{} {}".format(texts[i], ' '.join(emojis)), use_aliases=True))
+        # st.write(emoji.emojize("{} {}".format(texts[i], ' '.join(emojis)), use_aliases=True))
+        st.write(emoji.emojize(' '.join(emojis), use_aliases=True))
 
 
 def main():
@@ -64,20 +69,22 @@ def main():
     games = games_df.index.values
     genres = genres_df.genre.values
 
+    model = get_model()
+    vocabulary = get_vocab()
+    tokenizer = SentenceTokenizer(vocabulary, MAX_TEXT_LEN)
+
     game = st.selectbox("Choose game to analyse: ", games,)
     game_emojis = get_emojis_from_game_name(games_df, game)
     st.write(game_emojis)
 
-    st.markdown("# Most popular emotions in genre")
+    st.markdown("## Most popular emotions in genre")
     genre = st.selectbox("Choose genre to analyse: ", genres)
     genre_emojis = get_top_emojis_by_genres_from_gr(genres_df, genre)
     st.write(genre_emojis)
 
-    # maxlen = len(max(REVIEWS.values(), key=len))
-    # model = get_model()
-    # vocabulary = get_vocab()
-    # tokenizer = SentenceTokenizer(vocabulary, maxlen)
-    # predict_emojis([REVIEWS[game]], model, tokenizer)
+    st.markdown("## Analyse your review")
+    user_text = st.text_input("Write your review", DEFAULT_REVIEW)
+    predict_emojis(user_text, model, tokenizer)
 
 
 if __name__ == "__main__":

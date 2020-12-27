@@ -1,3 +1,5 @@
+import os
+
 EMOJIS = ":joy: :unamused: :weary: :sob: :heart_eyes: \
 :pensive: :ok_hand: :blush: :heart: :smirk: \
 :grin: :notes: :flushed: :100: :sleeping: \
@@ -14,17 +16,16 @@ EMOJIS = ":joy: :unamused: :weary: :sob: :heart_eyes: \
 
 
 # Paths to torchMoji model data
-PRETRAINED_PATH = "./torchMoji/model/pytorch_model.bin"
-VOCAB_PATH = "./torchMoji/model/vocabulary.json"
+MODEL_FOLDER = "model"
+PRETRAINED_PATH = os.path.join(MODEL_FOLDER, "pytorch_model.bin")
+VOCAB_PATH = os.path.join(MODEL_FOLDER, "vocabulary.json")
+WEIGHTS_DOWNLOAD_LINK = 'https://www.dropbox.com/s/q8lax9ary32c7t9/pytorch_model.bin?dl=0#'
+VOCABULARY_DOWNLOAD_LINK = 'https://raw.githubusercontent.com/MaximSinyaev/torchMoji/master/model/vocabulary.json'
 
 # Dataset paths
 REVIEWS_DATA_PATH = "./data/games.json"
 
-# Mock data constants
-# TODO delete in the final version, only for dev branch
-GAME_LIST = ["Fallout 4", "Far Cry 3", "Cyberpunk 2077"]
-REVIEWS = {
-    "Fallout 4": "very boring building's everything",
-    "Far Cry 3": "Nice game, Did I ever tell you what the definition of insanity is?",
-    "Cyberpunk 2077": "bugs, bugs, bugs",
-}
+# Auxiliary
+MAX_TEXT_LEN = 1000
+MB_FACTOR = float(1 << 20)
+DEFAULT_REVIEW = "Great game!"
