@@ -1,4 +1,13 @@
 import os
+from textwrap import dedent
+
+DESCRIPTION = dedent("""\
+    If we want to choose a game, we often look at *reviews*. Reviews mainly describe the *emotions* the player received
+    from the game. And what better way to reflect these emotions than Emoji?
+    Our service allows you to convert reviews into emojis and view statistics on games in the context of Emoji, obtained
+    from reviews on games.
+    """)
+
 
 EMOJIS = ":joy: :unamused: :weary: :sob: :heart_eyes: \
 :pensive: :ok_hand: :blush: :heart: :smirk: \
@@ -22,10 +31,18 @@ VOCAB_PATH = os.path.join(MODEL_FOLDER, "vocabulary.json")
 WEIGHTS_DOWNLOAD_LINK = 'https://www.dropbox.com/s/q8lax9ary32c7t9/pytorch_model.bin?dl=1#'
 VOCABULARY_DOWNLOAD_LINK = 'https://raw.githubusercontent.com/MaximSinyaev/torchMoji/master/model/vocabulary.json'
 
-# Dataset paths
-REVIEWS_DATA_PATH = "./data/games.json"
+# Datasets
+DATA_FOLDER = 'data/'
+COLUMNS_RENAME_DICT = {
+    'review_rating': 'Review rating',
+    'developer': 'Developer',
+    'price_bins': 'Price category',
+    'release_date_year': 'Release year'
+}
+
 
 # Auxiliary
 MAX_TEXT_LEN = 1000
 MB_FACTOR = float(1 << 20)
 DEFAULT_REVIEW = "Great game!"
+FLOAT_FORMATTER = '{:,.2f}%'.format
