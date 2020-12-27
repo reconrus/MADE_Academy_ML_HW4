@@ -120,7 +120,10 @@ def create_col_dist(full_data):
     value = st.selectbox(f"Choose {agg_col} to analyse:", sorted(uniq_vals))
     col_dist = get_top_by_column(full_data, agg_col, value)
     st.write(col_dist.T.iloc[:, :5].style.format(FLOAT_FORMATTER))
-    st.area_chart(data=col_dist)
+
+    fig = px.area(x=col_dist.index.tolist(), y=col_dist[value].tolist(),
+                  labels={"x": "emoji", "y": "percentage"})
+    st.plotly_chart(fig)
 
 
 def load_pretrained():
