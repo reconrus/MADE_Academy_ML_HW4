@@ -19,6 +19,6 @@ def get_top_by_column(df, col, value, top_n=10):
     assert col != 'name'
     emoji_cols = [col for col in df.columns if not col.isascii()]
     num = df[[col, 'name']].groupby(col).count().values
-    dist = df[[col] + emoji_cols].groupby(col).sum() / np.repeat(num, len(emoji_cols)).reshape(num.shape[0], -1) * 100
+    dist = df[[col] + emoji_cols].groupby(col).sum() / num * 100
     return pd.DataFrame(dist.loc[value].sort_values(ascending=False).iloc[:top_n])
 

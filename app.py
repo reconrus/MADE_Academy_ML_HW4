@@ -85,6 +85,7 @@ def text_split(s, max_len):
 def games_distribution(games_df, top_n=10):
     games = games_df.index.values
     displayed_emojis_num = 7
+    plot_emojis_num = 10
     # Emojis distribution by game
     st.markdown('## Game reviews examination')
     game = st.selectbox("Choose game to analyse: ", games, index=0)
@@ -101,7 +102,7 @@ def games_distribution(games_df, top_n=10):
         games = [game]
         st.markdown(f"### Top-{displayed_emojis_num} \"{game}\" Emojis distribution")
 
-    emoji_dist_df = pd.DataFrame(pd.concat((games_df.loc[i, full_emojis] for i in games), axis=1)).iloc[:10]
+    emoji_dist_df = pd.DataFrame(pd.concat((games_df.loc[i, full_emojis] for i in games), axis=1)).iloc[:plot_emojis_num] * 20
     st.write(emoji_dist_df.iloc[:displayed_emojis_num].T.style.format(FLOAT_FORMATTER))
 
     # Distribution plot
@@ -135,9 +136,9 @@ def create_col_dist(full_data):
     agg_cols = ['Review rating', 'Developer', 'Price category', 'Release year']
     st.markdown("In this section you can aggregate reviews by following params:\n")
     st.markdown('\n'.join([f'\t- {col}' for col in agg_cols]))
-    agg_col = st.selectbox("Choose genre to analyse: ", agg_cols)
+    agg_col = st.selectbox("Choose game feature to analyse: ", agg_cols)
     uniq_vals = full_data[agg_col].unique()
-    value = st.selectbox("Choose genre to analyse:", uniq_vals)
+    value = st.selectbox(f"Choose {agg_col} to analyse:", uniq_vals)
     col_dist = get_top_by_column(full_data, agg_col, value)
     st.write(col_dist.T.iloc[:, :5].style.format(FLOAT_FORMATTER))
     st.area_chart(data=col_dist)
