@@ -19,7 +19,7 @@ EMOJIS = ":joy: :unamused: :weary: :sob: :heart_eyes: \
 MODEL_FOLDER = "model"
 PRETRAINED_PATH = os.path.join(MODEL_FOLDER, "pytorch_model.bin")
 VOCAB_PATH = os.path.join(MODEL_FOLDER, "vocabulary.json")
-WEIGHTS_DOWNLOAD_LINK = 'https://www.dropbox.com/s/q8lax9ary32c7t9/pytorch_model.bin?dl=0#'
+WEIGHTS_DOWNLOAD_LINK = 'https://www.dropbox.com/s/q8lax9ary32c7t9/pytorch_model.bin?dl=1#'
 VOCABULARY_DOWNLOAD_LINK = 'https://raw.githubusercontent.com/MaximSinyaev/torchMoji/master/model/vocabulary.json'
 
 # Dataset paths

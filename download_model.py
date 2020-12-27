@@ -1,5 +1,6 @@
 from __future__ import print_function
 import os
+import requests
 from subprocess import call
 
 from constants import (
@@ -15,10 +16,9 @@ def download(path, link, name):
     else:
         print('Downloading the {} file from {}'.format(name, link))
 
-        # downloading using wget due to issues with urlretrieve and requests
-        sys_call = 'wget {} -O {}'.format(link, os.path.abspath(path))
-        print("Running system call: {}".format(sys_call))
-        call(sys_call, shell=True)
+        response = requests.get(link, allow_redirects=True)
+        with open(path, 'wb') as f:
+            f.write(response.content)
 
         print('Downloaded {} to {}'.format(name, path))
     return path
