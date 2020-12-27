@@ -148,8 +148,25 @@ def predict_emojis(model, tokenizer):
     st.write(predictions.style.format(FLOAT_FORMATTER))
 
 
-def main(top_n=10):
+def set_header():
     st.markdown("# 🎲 Game Reviews Sentiment Analysis With Emojis")
+    authors = ['Maxim Sinyaev', 'Vyacheslav Yastrebov', 'Savkin Egor']
+    np.random.shuffle(authors)
+    st.markdown('**Authors**: ' + ', '.join([f'*{a}*' for a in authors]))
+
+
+def set_references():
+    resources = [
+        'UX/UI — [streamlit](https://www.streamlit.io/)',
+        'Model — [TorchMoji](https://github.com/huggingface/torchMoji)'
+    ]
+    st.markdown('## Resources:')
+    resources = '\n'.join(f'\t- {resource}' for resource in resources)
+    st.markdown(resources)
+
+
+def main(top_n=10):
+    set_header()
     # Loading data
     games_df, genres_df, full_data = load_data()
     # Loading torchMoji model
@@ -164,6 +181,8 @@ def main(top_n=10):
     create_col_dist(full_data)
     # Predict user's review sentiments
     predict_emojis(model, tokenizer)
+    # References
+    set_references()
 
 
 if __name__ == "__main__":
