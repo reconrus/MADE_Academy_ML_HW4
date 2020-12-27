@@ -4,6 +4,7 @@ import os
 import emoji
 import numpy as np
 import pandas as pd
+import plotly.express as px
 import streamlit as st
 
 from get_top import get_emojis_from_game_name, get_top_emojis_by_genres_from_gr, get_top_by_column
@@ -86,10 +87,16 @@ def games_distribution(games_df, top_n=10):
     emoji_dist_df = pd.DataFrame(pd.concat((games_df.loc[i, full_emojis]
                                             for i in games), axis=1)).iloc[:plot_emojis_num] * 20
     st.write(emoji_dist_df.iloc[:displayed_emojis_num].T.style.format(FLOAT_FORMATTER))
+    emoji_dist_df = emoji_dist_df.reset_index()
+    emoji_dist_df = emoji_dist_df.rename(columns={"index": "emoji"})
+    emoji_dist_df = pd.melt(emoji_dist_df, id_vars=["emoji"], var_name="game", value_name="percentage")
 
     # Distribution plot
     st.markdown("### Emojis distribution plot")
-    st.line_chart(data=emoji_dist_df)
+    fig = px.bar(emoji_dist_df, x="emoji", y="percentage",
+                 color='game', barmode='group',
+                 height=400)
+    st.plotly_chart(fig)
 
 
 # Genre Distribution
@@ -110,7 +117,7 @@ def create_col_dist(full_data):
     st.markdown('\n'.join([f'\t- {col}' for col in agg_cols]))
     agg_col = st.selectbox("Choose game feature to analyse: ", agg_cols)
     uniq_vals = full_data[agg_col].unique()
-    value = st.selectbox(f"Choose {agg_col} to analyse:", uniq_vals)
+    value = st.selectbox(f"Choose {agg_col} to analyse:", sorted(uniq_vals))
     col_dist = get_top_by_column(full_data, agg_col, value)
     st.write(col_dist.T.iloc[:, :5].style.format(FLOAT_FORMATTER))
     st.area_chart(data=col_dist)
