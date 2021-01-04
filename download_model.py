@@ -3,7 +3,7 @@ import os
 import requests
 from subprocess import call
 
-from constants import (
+from constants_ import (
     MB_FACTOR,
     MODEL_FOLDER, PRETRAINED_PATH, VOCAB_PATH,
     WEIGHTS_DOWNLOAD_LINK, VOCABULARY_DOWNLOAD_LINK,

@@ -12,7 +12,7 @@ from get_top import get_emojis_from_game_name, get_top_emojis_by_genres_from_gr,
 from torchmoji.sentence_tokenizer import SentenceTokenizer
 from torchmoji.model_def import torchmoji_emojis
 
-from constants import (
+from constants_ import (
     EMOJIS, MAX_TEXT_LEN, DEFAULT_REVIEW,
     VOCAB_PATH, DATA_FOLDER, DESCRIPTION,
     FLOAT_FORMATTER, COLUMNS_RENAME_DICT,
