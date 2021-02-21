@@ -1,0 +1,6 @@
+env/*
+__pycache__/*
+torchMoji/*
+*.ipynb
+torchMoji
+model/*
